@@ -6,17 +6,23 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo apt-get update
     sudo apt-get install neovim
 
+    # Move the Neovim configuration directory to the appropriate location
+    mv ~/neovim ~/.config/nvim
+
 elif [[ "$OSTYPE" == "msys" ]]; then
-    # Install Neovim on Windows using scoop (assuming scoop is installed)
+    if ! command -v scoop &> /dev/null; then
+        iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+    fi
+    
     scoop install neovim
+
+    # Move the Neovim configuration directory to the appropriate location
+    move ~\neovim ~/.config\nvim
 
 else
     echo "Unsupported operating system. Please install Neovim manually."
     exit 1
 fi
-
-# Clone the Neovim configuration repository
-git clone <GitHub-Repository-URL> ~/.config/nvim
 
 # Install the Mason plugin manager (if it's not already installed)
 if ! command -v mason &> /dev/null; then
@@ -30,4 +36,3 @@ mason install
 
 # Open Neovim and let Mason manage the plugins
 nvim +PackerCompile +PackerInstall +qall
-
